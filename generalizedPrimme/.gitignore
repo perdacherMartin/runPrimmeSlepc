@@ -1,0 +1,6 @@
+# ignore object binary
+generalizedPrimme
+
+# ignore additional matrix files
+*.ascii
+
