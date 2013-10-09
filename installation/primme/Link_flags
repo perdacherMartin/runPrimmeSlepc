@@ -1,0 +1,62 @@
+#---------------------------------------------------------------
+#             LINKING FLAGS FOR THE TEST PROGRAMS
+# 	      in ZTEST and DTEST test directories
+#     Linking primme, BLAS/LAPACK for various architectures. 
+#    Makefiles in ZTEST and DTEST must also include Make_flags
+#---------------------------------------------------------------
+
+#---------------------------------------------------------------
+# Loader by default f77
+# On Suse Linux use gfortran, NOT g77 (BLAS/LAPACK made with gfortran) 
+# LDR = gfortran
+#---------------------------------------------------------------
+# edited by martin perdacher:
+# LDR = f77
+LDR = /usr/local/parastation/mpi2-intel-5.0.26-1/bin/mpif77
+LDR2 = /usr/local/parastation/mpi2-intel-5.0.26-1/bin/mpif77
+
+INCLUDE = -I$(COMMONDIR)
+LIBDIRS = -L$(TOP)
+
+#---------------------------------------------------------------
+#  Basic Link flags for LAPACK/BLAS and math
+#---------------------------------------------------------------
+# Mac OSX 10.4 using veclib for BLAS/LAPACK
+#
+# LDFLAGS = -Wl,-framework -Wl,vecLib 
+# LIBS = -lprimme -lm 
+#---------------------------------------------------------------
+# LINUX 2.6.13-15.11-smp (32 bit image)
+#
+#LIBS = -lprimme -lm -L/usr/lib/ -llapack -lblas -lgfortran -lg2c
+#ifeq ($(CC),c++)
+#LIBS += -lstdc++
+#endif
+#---------------------------------------------------------------
+# Linux 2.6.13-15.12-smp (64 bit image)
+#LIBS = -lprimme -lm -L/usr/lib64/ -llapack -lblas -lgfortran -lg2c
+LIBS = -lprimme -lm -L/usr/lib64/ -L$MKLPATH -lmkl_lapack -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -liomp5 -lpthread -lgfortran -lirc
+ifeq ($(CC),c++)
+LIBS += -lstdc++
+endif
+#---------------------------------------------------------------
+# CentOS AMD Opteron (64 bit) using g77 and ACML for lapack/blas
+#LIBS = -lprimme -lm -L/usr/local/acml-3.5.0/gnu64/lib/ -lacml -lacml_mv -lg2c
+#ifeq ($(CC),c++)
+#LIBS += -lstdc++
+#endif
+#---------------------------------------------------------------
+# Sun Solaris, SunOS 5.9  using sunperf math library
+#
+#LDFLAGS = 
+#LIBS = -lprimme -lm -lrt -xlic_lib=sunperf
+#---------------------------------------------------------------
+# custom
+LDFLAGS = -limf -lm -lirc -lgsl -lgslcblas -fPIC -fPIC -wd1572 -g
+#LIBS = -lprimme -L/usr/lib/ -llapack -lblas -lm  -lg2c
+#---------------------------------------------------------------
+
+#---------------------------------------------------------------
+# Link any other sequential or parallel libraries 
+# in the test makefiles
+#---------------------------------------------------------------
